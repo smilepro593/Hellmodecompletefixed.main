@@ -1,0 +1,135 @@
+----------------------------
+-- HARD BLOCK ALL MODES
+----------------------------
+getgenv().HELLMODE_LOCK = true
+for _,v in pairs({
+	"HellModeV2","HellModeV6","BrokenMode","UltraHard",
+	"Impossible","Hardcore","Mayhem","Fear","Furry"
+}) do
+	getgenv()[v] = nil
+end
+
+----------------------------
+-- LOAD SHADER
+----------------------------
+pcall(function()
+	loadstring(game:HttpGet(
+		"https://raw.githubusercontent.com/randomstring0/pshade-ultimate/refs/heads/main/src/cd.lua"
+	))()
+end)
+
+----------------------------
+-- GUIDING LIGHT CANDLE
+----------------------------
+pcall(function()
+	loadstring(game:HttpGet(
+		"https://raw.githubusercontent.com/Junbbinopro/Guiding-light-candle/refs/heads/main/Candle"
+	))()
+end)
+
+----------------------------
+-- SPRINT
+----------------------------
+pcall(function()
+	loadstring(game:HttpGet(
+		"https://raw.githubusercontent.com/trungdepth-dot/Sprint-stamina-v2/refs/heads/main/Sprint", true
+	))()
+end)
+
+----------------------------
+-- DOORS CAPTION (FADE)
+----------------------------
+task.spawn(function()
+	local caption = require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game)
+	caption:caption("Hell mode script successfully loaded", true)
+	task.wait(2)
+	caption:caption("By Smile x Tuffmu", true)
+	task.wait(2)
+	caption:caption("Good luck!", true)
+end)
+
+----------------------------
+-- RAINBOW TEXT (BOTTOM LEFT)
+----------------------------
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+
+local gui = Instance.new("ScreenGui", player.PlayerGui)
+gui.Name = "HellModeRainbow"
+
+local label = Instance.new("TextLabel", gui)
+label.Size = UDim2.new(0, 260, 0, 24)
+label.Position = UDim2.new(0, 10, 1, -34)
+label.BackgroundTransparency = 1
+label.Text = "Hell Mode by Smile x Tuffmu!"
+label.TextSize = 14
+label.Font = Enum.Font.GothamBold
+label.TextXAlignment = Left
+
+local hue = 0
+RunService.RenderStepped:Connect(function(dt)
+	hue = (hue + dt * 0.15) % 1
+	label.TextColor3 = Color3.fromHSV(hue, 1, 1)
+end)
+
+----------------------------
+-- ENTITY LIST (HELL)
+----------------------------
+local ENTITIES = {
+	"https://raw.githubusercontent.com/eoyoustme/rebouna/refs/heads/main/Ripper%20old2",
+	"https://raw.githubusercontent.com/Junbbinopro/Surge-entity/refs/heads/main/Surge",
+	"https://raw.githubusercontent.com/Junbbinopro/Shocker-entity/refs/heads/main/Shocker",
+	"https://raw.githubusercontent.com/J63633S/Laver-mode/refs/heads/main/Chaotic",
+	"https://raw.githubusercontent.com/Junbbinopro/Bluyer-entity/refs/heads/main/Bluyer",
+	"https://raw.githubusercontent.com/eoyoustme/ohh/refs/heads/main/Draft1",
+	"https://raw.githubusercontent.com/talales/Nhankg./refs/heads/main/Fluster",
+	"https://raw.githubusercontent.com/Junbbinopro/Trauma-entity/refs/heads/main/Trauma",
+	"https://raw.githubusercontent.com/eoyoustme/ohh/refs/heads/main/Torment12",
+	"https://raw.githubusercontent.com/Junbbinopro/Munci-entity/refs/heads/main/Munci-20",
+	"https://raw.githubusercontent.com/Junbbinopro/Hungerd/refs/heads/main/Entity",
+	"https://raw.githubusercontent.com/trungdepth-dot/Him-entity-doors/refs/heads/main/Him",
+	"https://raw.githubusercontent.com/Idk-lol2/a-60aa/refs/heads/main/---%3D%3D%3D%3D%3D%3D%20a-60%20agresiv%20spawner%20%3D%3D%3D%3D%3D%3D---.txt",
+	"https://raw.githubusercontent.com/Junbbinopro/Black-smile/refs/heads/main/Black",
+	"https://raw.githubusercontent.com/Junbbinopro/350-entity/refs/heads/main/350"
+}
+
+----------------------------
+-- SPAWN LOGIC (DOOR >=10)
+----------------------------
+local Rep = game:GetService("ReplicatedStorage")
+local plr = game.Players.LocalPlayer
+
+local function getDoor()
+	return Rep.GameData.LatestRoom.Value
+end
+
+local function runEntity(url)
+	pcall(function()
+		loadstring(game:HttpGet(url))()
+	end)
+end
+
+task.spawn(function()
+	while task.wait(math.random(20,35)) do
+		if getDoor() < 10 then continue end
+
+		local roll = math.random()
+		if roll <= 0.001 then
+			-- 0.1% spawn ALL
+			for _,u in ipairs(ENTITIES) do
+				task.spawn(runEntity, u)
+			end
+
+		elseif roll <= 0.03 then
+			-- 3% spawn 2–3
+			for i = 1, math.random(2,3) do
+				task.spawn(runEntity, ENTITIES[math.random(#ENTITIES)])
+			end
+
+		else
+			-- 100% spawn 1
+			runEntity(ENTITIES[math.random(#ENTITIES)])
+		end
+	end
+end)
